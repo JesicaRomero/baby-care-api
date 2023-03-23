@@ -1,30 +1,11 @@
 import express from 'express'
 import cors from 'cors'
+import routes from './routes/index'
 
-class App {
-  public app: express.Application
+const app = express()
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(cors())
+app.use(routes)
 
-  constructor() {
-    this.app = express()
-    this.config()
-    this.routes()
-  }
-
-  private config(): void {
-    this.app.use(express.json())
-    this.app.use(express.urlencoded({ extended: true }))
-    this.app.use(cors())
-  }
-
-  private routes(): void {
-    const router = express.Router()
-
-    router.get('/', (req, res) => {
-      res.send('Baby Care API')
-    })
-
-    this.app.use('/', router)
-  }
-}
-
-export default new App().app
+export default app

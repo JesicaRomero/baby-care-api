@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "dev": "ts-node-dev src/index.ts",
+    "rox": "tsc & nodemon src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -33,6 +34,7 @@
     "@types/node": "^18.15.5",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",
+    "typedoc": "^0.23.28",
     "typescript": "^5.0.2"
   }
 }

@@ -1,4 +1,4 @@
-import { DataTypes, HasOne, Model, UUIDV4 } from 'sequelize'
+import { DataTypes, Model, UUIDV4 } from 'sequelize'
 import sequelize from '../database'
 import { Baby } from './baby';
 

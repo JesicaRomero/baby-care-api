@@ -15,24 +15,30 @@ const login = async (req: Request, res: Response) => {
   return res.json(user)
 }
 
-const register = async (req: Request, res: Response, next: NextFunction) => {
-  const { username, babyName, birthdate, email, password, communityCode } = req.body;
-  console.log(req.body);
+const register = async (req: Request, res: Response) => {
   try {
+    const { username, babyName, birthdate, email, password, community_code } = req.body;
     const user = await User.create({
       username,
       email,
       password
     });
-    console.log({ user });
 
+    const newUser = user.dataValues;
+
+    const baby = await Baby.create({
+      user_id: newUser.id,
+      name: babyName,
+      birthdate,
+      community_code: community_code,
+    });
     res.status(201).json({
       ok: true,
       status: 201,
-      message: user
+      message: { newUser, baby }
     });
   } catch (error) {
-    next(error);
+    res.status(500).send('Ha ocurrido un error en el registro');
   }
 }
 

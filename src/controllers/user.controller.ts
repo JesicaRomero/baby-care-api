@@ -17,7 +17,7 @@ const login = async (req: Request, res: Response) => {
 
 const register = async (req: Request, res: Response) => {
   try {
-    const { username, babyName, birthdate, email, password, community_code } = req.body;
+    const { username, babyName, birthdate, email, password, communityCode } = req.body;
     const user = await User.create({
       username,
       email,
@@ -30,7 +30,7 @@ const register = async (req: Request, res: Response) => {
       user_id: newUser.id,
       name: babyName,
       birthdate,
-      community_code: community_code,
+      community_code: communityCode,
     });
     res.status(201).json({
       ok: true,

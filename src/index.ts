@@ -3,7 +3,8 @@ import dotenv from 'dotenv'
 import app from './app'
 import sequelize from './database'
 
-dotenv.config()
+dotenv.config({ path: __dirname + '.env' })
+console.log(process.env);
 const port = process.env.PORT || 3000
 
 const runServer = async () => {
@@ -11,7 +12,7 @@ const runServer = async () => {
     await sequelize.authenticate()
     console.log('Connection has been established successfully.')
 
-    await sequelize.sync({ alter: true })
+    await sequelize.sync({ alter: true, force: true })
     console.log('Models synchronized successfully.')
 
     app.listen(port, () => {

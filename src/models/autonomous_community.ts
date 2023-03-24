@@ -29,6 +29,8 @@ AutonomousCommunity.hasOne(Baby, {
         allowNull: true
     }
 });
+
+AutonomousCommunity.hasOne(Baby, { foreignKey: 'community_code' });
 Baby.belongsTo(AutonomousCommunity, { foreignKey: 'community_code' });
 
 export { AutonomousCommunity }

@@ -1,0 +1,93 @@
+Project BabyCare {
+  database_type: 'MySQL'
+  Note: '''
+    # Base de datos para BABYCARE
+  '''
+}
+
+Table babycare.autonomous_communities {
+  code int [pk]
+  name varchar
+}
+
+Table babycare.users {
+  id uuid [pk, increment]
+  username varchar
+  email varchar [not null]
+  password varchar [not null]
+}
+
+Table babycare.babies {
+  id int [pk, increment]
+  user_id uuid [not null, ref: > babycare.users.id]
+  name varchar
+  birthdate date
+  community_code int [ref: > babycare.autonomous_communities.code, note: "Actualmente este campo sólo nos serviría para mostrar las vacunas"]
+}
+
+Enum feeding_type {
+  breastfeeding
+  solids
+  bottle
+}
+
+Table babycare.feeding {
+  id int [pk, increment]
+  baby_id int [ref: > babycare.babies.id]
+  type feeding_type
+  time_left_breast time
+  time_right_breast time
+  amount_bottle int
+  amount_solids int
+  created_at timestamp [default: `now()`, note: "Fecha y hora de creación"]
+}
+
+Enum poo_type {
+  soft
+  hard
+  normal
+  diarrhea
+}
+
+Enum poo_color {
+  black
+  brown
+  yellow
+  green
+}
+
+Table babycare.poo {
+  id int [pk, increment]
+  baby_id int [ref: > babycare.babies.id]
+  consistency poo_type
+  color poo_color
+  created_at timestamp [default: `now()`, note: "Fecha y hora de creación"]
+}
+
+Enum babycare.vaccination_period {
+  newborn
+  month_2
+  month_4
+  month_6
+  month_11
+  month_12
+  month_15
+}
+
+Table babycare.vaccines {
+  id int [pk, increment]
+  community_code int [ref: > babycare.autonomous_communities.code]
+  period vaccination_period
+  description text
+}
+
+Table babycare.appointments {
+  id int [pk, increment]
+  baby_id int [ref: > babycare.babies.id]
+  title varchar(100) [not null]
+  date timestamp [not null]
+  time time [not null]
+  details text [note: "Campo para agregar detalles acerca de la cita"]
+}
+
+

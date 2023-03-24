@@ -1,7 +1,8 @@
-import { DataTypes, Model, UUIDV4 } from 'sequelize'
+import { DataTypes, HasOne, Model, UUIDV4 } from 'sequelize'
 import sequelize from '../database'
+import { Baby } from './baby';
 
-class User extends Model {}
+class User extends Model { }
 
 User.init(
   {
@@ -10,7 +11,7 @@ User.init(
       defaultValue: UUIDV4,
       primaryKey: true,
     },
-    familyName: {
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -26,8 +27,12 @@ User.init(
   },
   {
     sequelize,
+    timestamps: false,
     tableName: 'users',
   }
-)
+);
+
+User.hasOne(Baby, { foreignKey: 'user_id' });
+Baby.belongsTo(User, { foreignKey: 'user_id' });
 
 export { User }

@@ -47,13 +47,11 @@ const register = async (req: Request, res: Response) => {
   try {
     const { username, babyName, birthdate, email, password, communityCode } =
       req.body
-    // const user = await User.create({
-    //   username,
-    //   email,
-    //   password,
-    // })
-    const user = await User.create(req.body)
-    console.log(user)
+    const user = await User.create({
+      username,
+      email,
+      password,
+    })
     const newUser = user.dataValues
 
     await Baby.create({

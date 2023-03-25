@@ -2,37 +2,36 @@ import { DataTypes, Model, UUIDV4 } from 'sequelize'
 import sequelize from '../database'
 import { Baby } from './baby'
 
-class User extends Model {}
+class Appointment extends Model {}
 
-User.init(
+Appointment.init(
   {
     id: {
       type: DataTypes.UUID,
       defaultValue: UUIDV4,
       primaryKey: true,
     },
-    username: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
+    details: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
+      allowNull: true,
     },
-    password: {
-      type: DataTypes.STRING,
+    date: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
   },
   {
     sequelize,
     timestamps: false,
-    tableName: 'users',
+    tableName: 'appointments',
   }
 )
 
-User.hasOne(Baby, { foreignKey: 'userId' })
-Baby.belongsTo(User, { foreignKey: 'userId' })
+Baby.hasMany(Appointment, { foreignKey: 'babyId' })
+Appointment.belongsTo(Baby, { foreignKey: 'babyId' })
 
-export { User }
+export { Appointment }

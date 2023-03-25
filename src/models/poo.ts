@@ -2,37 +2,36 @@ import { DataTypes, Model, UUIDV4 } from 'sequelize'
 import sequelize from '../database'
 import { Baby } from './baby'
 
-class User extends Model {}
+class Poo extends Model {}
 
-User.init(
+Poo.init(
   {
     id: {
       type: DataTypes.UUID,
       defaultValue: UUIDV4,
       primaryKey: true,
     },
-    username: {
-      type: DataTypes.STRING,
+    color: {
+      type: DataTypes.ENUM('BLACK', 'BROWN', 'YELLOW', 'GREEN'),
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
+    consistency: {
+      type: DataTypes.ENUM('SOFT', 'HARD', 'NORMAL', 'DIARRHEA'),
       allowNull: false,
-      unique: true,
     },
-    password: {
-      type: DataTypes.STRING,
+    date: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
   },
   {
     sequelize,
     timestamps: false,
-    tableName: 'users',
+    tableName: 'poos',
   }
 )
 
-User.hasOne(Baby, { foreignKey: 'userId' })
-Baby.belongsTo(User, { foreignKey: 'userId' })
+Baby.hasMany(Poo, { foreignKey: 'babyId' })
+Poo.belongsTo(Baby, { foreignKey: 'babyId' })
 
-export { User }
+export { Poo }

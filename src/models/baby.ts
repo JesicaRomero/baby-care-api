@@ -14,7 +14,7 @@ Baby.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    birthdate: {
+    dateOfBirth: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },

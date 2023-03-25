@@ -45,20 +45,14 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
  */
 const register = async (req: Request, res: Response) => {
   try {
-    const { username, babyName, birthdate, email, password, communityCode } =
-      req.body
-    const user = await User.create({
-      username,
-      email,
-      password,
-    })
-    const newUser = user.dataValues
+    const { babyName } = req.body
 
+    const user = await User.create(req.body)
+    console.log(user)
     await Baby.create({
-      userId: newUser.id,
+      userId: user.dataValues.id,
       name: babyName,
-      birthdate,
-      community_code: communityCode,
+      ...req.body,
     })
     res.status(204).json({
       ok: true,
@@ -92,7 +86,7 @@ const register = async (req: Request, res: Response) => {
  */
 const editProfile = async (req: Request, res: Response) => {
   try {
-    const { username, email, password, babyName, birthdate, communityCode } =
+    const { username, email, password, babyName, dateOfBirth, communityCode } =
       req.body
 
     const user = await User.findOne({
@@ -112,8 +106,8 @@ const editProfile = async (req: Request, res: Response) => {
     user.dataValues.email = email
     user.dataValues.password = password
     user.dataValues.Baby.name = babyName
-    user.dataValues.Baby.birthdate = birthdate
-    user.dataValues.Baby.community_code = communityCode
+    user.dataValues.Baby.dateOfBirth = dateOfBirth
+    user.dataValues.Baby.communityCode = communityCode
 
     await user.save()
 

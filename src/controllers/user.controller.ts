@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 import { Baby, User } from '../models'
+import { UUIDV4 } from 'sequelize';
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -36,7 +37,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
  * ``` 
  * "username": "Roxy",
     "babyName": "Lulu",
-    "birthdate": "2023-12-01",
+    "birthday": "2023-12-01",
     "email": "perez@gmail.com",
     "password": "password",
     "communityCode": 17 
@@ -58,8 +59,9 @@ const register = async (req: Request, res: Response) => {
       ok: true,
       status: 204,
       message: 'No content',
-    })
+    });
   } catch (error) {
+    console.log(error);
     res.status(412).json({
       ok: false,
       status: 412,
@@ -77,7 +79,7 @@ const register = async (req: Request, res: Response) => {
  * ``` 
  * "username": "Roxy",
     "babyName": "Alexia",
-    "birthdate": "2023-12-01",
+    "birthday": "2023-12-01",
     "email": "perez@gmail.com",
     "password": "password",
     "communityCode": 8 
@@ -86,13 +88,12 @@ const register = async (req: Request, res: Response) => {
  */
 const editProfile = async (req: Request, res: Response) => {
   try {
-    const { username, email, password, babyName, dateOfBirth, communityCode } =
-      req.body
+    const { username, babyName, email, password } = req.body;
 
-    const user = await User.findOne({
+    let user = await User.findOne({
       where: { email },
-      include: [Baby],
-    })
+      include: [{ model: Baby }],
+    });
 
     if (!user) {
       return res.status(404).json({
@@ -102,51 +103,34 @@ const editProfile = async (req: Request, res: Response) => {
       })
     }
 
-    user.dataValues.username = username
-    user.dataValues.email = email
-    user.dataValues.password = password
-    user.dataValues.Baby.name = babyName
-    user.dataValues.Baby.dateOfBirth = dateOfBirth
-    user.dataValues.Baby.communityCode = communityCode
+    user.set({ username, email, password });
+    user = await user.save();
 
-    await user.save()
+    const baby = await Baby.update(
+      { name: babyName },
+      {
+        where: {
+          userId: user.dataValues.id
+        }
+      }
+    );
 
     res.status(200).json({
       ok: true,
       status: 200,
-      message: user,
+      message: { user, baby },
     })
   } catch (error) {
     res.status(412).json({
       ok: false,
       status: 412,
       message: 'Incorrect or missing data',
-    })
-  }
-}
-
-const getUserWithBaby = async (req: Request, res: Response) => {
-  try {
-    const user = await User.findOne({
-      where: { id: req.params.id },
-      include: [Baby],
-    })
-    if (!user) {
-      return res.status(404).json({
-        ok: false,
-        status: 404,
-        message: 'User not found',
-      })
-    }
-    res.json(user)
-  } catch (error) {
-    console.log(error)
+    });
   }
 }
 
 export default {
   login,
   register,
-  editProfile,
-  getUserWithBaby,
+  editProfile
 }

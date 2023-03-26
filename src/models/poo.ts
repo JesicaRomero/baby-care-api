@@ -31,7 +31,7 @@ Poo.init(
   }
 )
 
-Baby.hasMany(Poo, { foreignKey: 'babyId' })
-Poo.belongsTo(Baby, { foreignKey: 'babyId' })
+Baby.hasMany(Poo, { foreignKey: 'baby_id' })
+Poo.belongsTo(Baby, { foreignKey: 'baby_id' })
 
 export { Poo }

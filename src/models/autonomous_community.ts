@@ -5,31 +5,31 @@ import { Baby } from './baby'
 class AutonomousCommunity extends Model {}
 
 AutonomousCommunity.init(
-  {
-    code: {
-      type: DataTypes.INTEGER.UNSIGNED,
-      primaryKey: true,
+    {
+        code: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            primaryKey: true,
+        },
+        name: {
+            type: DataTypes.STRING(50),
+            allowNull: false,
+        },
     },
-    name: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-  },
-  {
-    sequelize,
-    timestamps: false,
-    tableName: 'autonomous_communities',
-  }
-)
+    {
+        sequelize,
+        timestamps: false,
+        underscored: true,
+        tableName: 'autonomous_communities',
+    }
+);
 
 AutonomousCommunity.hasOne(Baby, {
-  foreignKey: {
-    name: 'communityCode',
-    allowNull: true,
-  },
-})
-
-AutonomousCommunity.hasOne(Baby, { foreignKey: 'communityCode' })
-Baby.belongsTo(AutonomousCommunity, { foreignKey: 'communityCode' })
+    foreignKey:
+    {
+        name: 'community_code',
+        allowNull: true
+    }
+});
+Baby.belongsTo(AutonomousCommunity, { foreignKey: 'community_code' });
 
 export { AutonomousCommunity }

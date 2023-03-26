@@ -1,4 +1,4 @@
-import type { Request, Response, NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express';
 
 export const notFound = (req: Request, res: Response, next: NextFunction) => {
   res.status(404).json({
@@ -7,8 +7,8 @@ export const notFound = (req: Request, res: Response, next: NextFunction) => {
       statusCode: 404,
       message: 'Not found',
     },
-  })
-}
+  });
+};
 
 export const internalServer = (
   error: unknown,
@@ -22,5 +22,5 @@ export const internalServer = (
       statusCode: 500,
       message: 'Internal server error',
     },
-  })
-}
+  });
+};

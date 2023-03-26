@@ -1,10 +1,10 @@
-import { Router } from 'express'
+import { Router } from 'express';
 
-import { pooController } from '../controllers'
+import { pooController } from '../controllers';
 
-const router = Router()
+const router = Router();
 
-router.get('/:babyId', pooController.getAll)
-router.post('/', pooController.create)
+router.get('/:babyId', pooController.getAll);
+router.post('/', pooController.create);
 
-export default router
+export default router;

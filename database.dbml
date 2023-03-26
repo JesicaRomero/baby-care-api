@@ -18,7 +18,7 @@ Table babycare.users {
 }
 
 Table babycare.babies {
-  id int [pk, increment]
+  id uuid [pk, increment]
   user_id uuid [not null, ref: > babycare.users.id]
   name varchar
   birthdate date
@@ -31,7 +31,7 @@ Enum feeding_type {
   bottle
 }
 
-Table babycare.feeding {
+Table babycare.feedings {
   id int [pk, increment]
   baby_id int [ref: > babycare.babies.id]
   type feeding_type
@@ -56,7 +56,7 @@ Enum poo_color {
   green
 }
 
-Table babycare.poo {
+Table babycare.poos {
   id int [pk, increment]
   baby_id int [ref: > babycare.babies.id]
   consistency poo_type

@@ -31,7 +31,7 @@ Appointment.init(
   }
 )
 
-Baby.hasMany(Appointment, { foreignKey: 'babyId' })
-Appointment.belongsTo(Baby, { foreignKey: 'babyId' })
+Baby.hasMany(Appointment, { foreignKey: 'baby_id' })
+Appointment.belongsTo(Baby, { foreignKey: 'baby_id' })
 
 export { Appointment }

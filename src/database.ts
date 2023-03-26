@@ -25,7 +25,7 @@ export const connect = async () => {
 }
 
 export const sync = async () => {
-  await sequelize.sync({ alter: true, force: false })
+  await sequelize.sync({ alter: true, force: true })
   console.log('Models synchronized successfully.')
 }
 

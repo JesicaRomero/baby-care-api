@@ -1,10 +1,10 @@
-import { Router } from 'express'
+import { Router } from 'express';
 
-import { appointmentController } from '../controllers'
+import { appointmentController } from '../controllers';
 
-const router = Router()
+const router = Router();
 
-router.get('/:babyId', appointmentController.getAll)
-router.post('/', appointmentController.create)
+router.get('/:babyId', appointmentController.getAll);
+router.post('/', appointmentController.create);
 
-export default router
+export default router;

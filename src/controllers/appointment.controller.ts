@@ -1,29 +1,29 @@
-import type { Request, Response, NextFunction } from 'express'
-import { Appointment } from '../models'
+import type { Request, Response, NextFunction } from 'express';
+import { Appointment } from '../models';
 
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { babyId } = req.params
+    const { babyId } = req.params;
     const appointments = await Appointment.findAll({
       where: { babyId },
       order: [['date', 'ASC']],
-    })
-    return res.json({ data: { appointments } })
+    });
+    return res.json({ data: { appointments } });
   } catch (error: unknown) {
-    next(error)
+    next(error);
   }
-}
+};
 
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const appointment = await Appointment.create(req.body)
-    return res.json({ data: { appointment } })
+    const appointment = await Appointment.create(req.body);
+    return res.json({ data: { appointment } });
   } catch (error: unknown) {
-    next(error)
+    next(error);
   }
-}
+};
 
 export default {
   getAll,
   create,
-}
+};

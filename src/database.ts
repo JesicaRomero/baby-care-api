@@ -1,8 +1,8 @@
-import { Sequelize } from 'sequelize'
-import dotenv from 'dotenv'
-import { AutonomousCommunity } from './models'
+import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
+import { AutonomousCommunity } from './models';
 
-dotenv.config()
+dotenv.config();
 
 const sequelize = new Sequelize(
   process.env.DB_NAME || '',
@@ -16,24 +16,24 @@ const sequelize = new Sequelize(
       underscored: true,
     },
   }
-)
+);
 
 export const connect = async () => {
   try {
-    await sequelize.authenticate()
-    console.log('Connection has been established successfully.')
+    await sequelize.authenticate();
+    console.log('Connection has been established successfully.');
   } catch (error) {
-    console.error('Unable to connect to the database:', error)
+    console.error('Unable to connect to the database:', error);
   }
-}
+};
 
 export const sync = async () => {
-  await sequelize.sync({ alter: true, force: true })
-  console.log('Models synchronized successfully.')
-}
+  await sequelize.sync({ alter: true, force: true });
+  console.log('Models synchronized successfully.');
+};
 
 export const populateAutonomousCommunity = async () => {
-  const communities = await AutonomousCommunity.findAll()
+  const communities = await AutonomousCommunity.findAll();
   if (communities.length === 0) {
     AutonomousCommunity.bulkCreate([
       { code: 1, name: 'Andalucía' },
@@ -53,8 +53,8 @@ export const populateAutonomousCommunity = async () => {
       { code: 15, name: 'País Vasco' },
       { code: 16, name: 'La Rioja' },
       { code: 17, name: 'Valencia' },
-    ]).then(() => console.log('** Comunidades Autónomas creadas **'))
+    ]).then(() => console.log('** Comunidades Autónomas creadas **'));
   }
-}
+};
 
-export default sequelize
+export default sequelize;

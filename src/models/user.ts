@@ -1,8 +1,8 @@
-import { DataTypes, Model, UUIDV4 } from 'sequelize'
-import sequelize from '../database'
-import { Baby } from './baby'
+import { DataTypes, Model, UUIDV4 } from 'sequelize';
+import sequelize from '../database';
+import { Baby } from './baby';
 
-class User extends Model { }
+class User extends Model {}
 
 User.init(
   {
@@ -33,7 +33,7 @@ User.init(
   }
 );
 
-User.hasOne(Baby, { foreignKey: 'user_id' });
-Baby.belongsTo(User, { foreignKey: 'user_id' });
+User.hasOne(Baby, { foreignKey: 'userId' });
+Baby.belongsTo(User, { foreignKey: 'userId' });
 
-export { User }
+export { User };

@@ -1,10 +1,9 @@
-import type { Request, Response, NextFunction } from 'express'
-import { Baby, User } from '../models'
-import { UUIDV4 } from 'sequelize';
+import type { Request, Response, NextFunction } from 'express';
+import { Baby, User } from '../models';
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password } = req.body
+    const { email, password } = req.body;
     const user = await User.findOne({
       where: {
         email,
@@ -12,7 +11,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       },
       include: [Baby],
       attributes: { exclude: ['password'] },
-    })
+    });
     if (!user) {
       return res.status(401).json({
         data: null,
@@ -20,13 +19,13 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
           statusCode: 401,
           message: 'Invalid email or password',
         },
-      })
+      });
     }
-    return res.json({ data: { user } })
+    return res.json({ data: { user } });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
 /**
  * 
@@ -46,15 +45,15 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
  */
 const register = async (req: Request, res: Response) => {
   try {
-    const { babyName } = req.body
+    const { babyName } = req.body;
 
-    const user = await User.create(req.body)
-    console.log(user)
+    const user = await User.create(req.body);
+    console.log(user);
     await Baby.create({
       userId: user.dataValues.id,
       name: babyName,
       ...req.body,
-    })
+    });
     res.status(204).json({
       ok: true,
       status: 204,
@@ -66,9 +65,9 @@ const register = async (req: Request, res: Response) => {
       ok: false,
       status: 412,
       message: 'Incorrect or missing data',
-    })
+    });
   }
-}
+};
 
 /**
  * 
@@ -100,7 +99,7 @@ const editProfile = async (req: Request, res: Response) => {
         ok: false,
         status: 404,
         message: 'User not found',
-      })
+      });
     }
 
     user.set({ username, email, password });
@@ -110,8 +109,8 @@ const editProfile = async (req: Request, res: Response) => {
       { name: babyName },
       {
         where: {
-          userId: user.dataValues.id
-        }
+          userId: user.dataValues.id,
+        },
       }
     );
 
@@ -119,7 +118,7 @@ const editProfile = async (req: Request, res: Response) => {
       ok: true,
       status: 200,
       message: { user, baby },
-    })
+    });
   } catch (error) {
     res.status(412).json({
       ok: false,
@@ -127,10 +126,10 @@ const editProfile = async (req: Request, res: Response) => {
       message: 'Incorrect or missing data',
     });
   }
-}
+};
 
 export default {
   login,
   register,
-  editProfile
-}
+  editProfile,
+};

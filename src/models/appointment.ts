@@ -1,6 +1,6 @@
-import { DataTypes, Model, UUIDV4 } from 'sequelize'
-import sequelize from '../database'
-import { Baby } from './baby'
+import { DataTypes, Model, UUIDV4 } from 'sequelize';
+import sequelize from '../database';
+import { Baby } from './baby';
 
 class Appointment extends Model {}
 
@@ -29,9 +29,9 @@ Appointment.init(
     timestamps: false,
     tableName: 'appointments',
   }
-)
+);
 
-Baby.hasMany(Appointment, { foreignKey: 'baby_id' })
-Appointment.belongsTo(Baby, { foreignKey: 'baby_id' })
+Baby.hasMany(Appointment, { foreignKey: 'babyId' });
+Appointment.belongsTo(Baby, { foreignKey: 'babyId' });
 
-export { Appointment }
+export { Appointment };

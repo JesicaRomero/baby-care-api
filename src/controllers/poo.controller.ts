@@ -7,6 +7,7 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
     const poos = await Poo.findAll({
       where: { babyId },
       order: [['date', 'DESC']],
+      limit: 50,
     });
     return res.json({ data: { poos } });
   } catch (error: unknown) {

@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import { Baby, User } from '../models';
+import { compareHash, encryptPassword } from '../shared/crypto';
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -7,21 +8,28 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     const user = await User.findOne({
       where: {
         email,
-        password,
       },
       include: [Baby],
-      attributes: { exclude: ['password'] },
     });
-    if (!user) {
-      return res.status(401).json({
-        data: null,
-        error: {
-          statusCode: 401,
-          message: 'Invalid email or password',
-        },
-      });
+
+    if (user) {
+      const isCorrectPassword = await compareHash(
+        password,
+        user.dataValues.password
+      );
+      if (isCorrectPassword) {
+        delete user.dataValues.password;
+        return res.json({ data: { user } });
+      }
     }
-    return res.json({ data: { user } });
+
+    return res.status(401).json({
+      data: null,
+      error: {
+        statusCode: 401,
+        message: 'Invalid email or password',
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -45,10 +53,13 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
  */
 const register = async (req: Request, res: Response) => {
   try {
-    const { babyName } = req.body;
+    const { babyName, password } = req.body;
 
-    const user = await User.create(req.body);
-    console.log(user);
+    const user = await User.create({
+      ...req.body,
+      password: await encryptPassword(password),
+    });
+
     await Baby.create({
       userId: user.dataValues.id,
       name: babyName,

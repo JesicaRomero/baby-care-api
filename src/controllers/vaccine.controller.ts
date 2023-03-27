@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Vaccine } from '../models/Vaccine';
+import { Vaccine } from '../models/vaccine';
 
 
 /**

@@ -40,7 +40,6 @@ Baby.init(
   },
   {
     sequelize,
-    underscored: true,
     timestamps: false,
     tableName: 'babies',
   }

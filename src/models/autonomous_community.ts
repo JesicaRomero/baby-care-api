@@ -18,7 +18,6 @@ AutonomousCommunity.init(
   {
     sequelize,
     timestamps: false,
-    underscored: true,
     tableName: 'autonomous_communities',
   }
 );

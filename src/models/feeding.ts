@@ -4,6 +4,12 @@ import { Baby } from './baby'
 
 class Feeding extends Model { }
 
+enum FeedingType {
+    BREASTFEEDING = 'breastfeeding',
+    BOTTLE = 'bottle',
+    SOLIDS = 'solids',
+}
+
 Feeding.init(
     {
         id: {
@@ -12,18 +18,18 @@ Feeding.init(
             primaryKey: true
         },
         type: {
-            type: DataTypes.ENUM('breastfeeding', 'solids', 'bottle'),
+            type: DataTypes.ENUM(FeedingType.BREASTFEEDING, FeedingType.BOTTLE, FeedingType.SOLIDS),
             allowNull: false
         },
         babyId: {
             type: DataTypes.UUID,
             allowNull: false,
             references: {
-              model: "babies",
-              key: "id"
+                model: "babies",
+                key: "id"
             },
             onDelete: "CASCADE"
-          },
+        },
         timeLeftBreast: {
             type: DataTypes.TIME,
             allowNull: true
@@ -50,7 +56,6 @@ Feeding.init(
         sequelize,
         tableName: 'feedings',
         timestamps: false,
-        underscored: true
     }
 );
 

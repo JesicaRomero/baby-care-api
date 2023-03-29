@@ -1,6 +1,5 @@
 import { Sequelize } from 'sequelize';
 import dotenv from 'dotenv';
-import { AutonomousCommunity } from './models';
 
 dotenv.config();
 
@@ -28,7 +27,7 @@ export const connect = async () => {
 };
 
 export const sync = async () => {
-  await sequelize.sync({ alter: true, force: true });
+  await sequelize.sync({ alter: true, force: false });
   console.log('Models synchronized successfully.');
 };
 

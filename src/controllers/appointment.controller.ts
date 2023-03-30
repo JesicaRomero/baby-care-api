@@ -20,6 +20,18 @@ const getAll = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const getOne = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const appointment = await Appointment.findOne({
+      where: { id },
+    });
+    return res.json({ data: { appointment } });
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
 const create = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const appointment = await Appointment.create(req.body);
@@ -29,7 +41,34 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const update = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const appointment = await Appointment.update(req.body, {
+      where: { id },
+    });
+    return res.json({ data: { appointment } });
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
+const deleteOne = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const appointment = await Appointment.destroy({
+      where: { id },
+    });
+    return res.json({ data: { appointment } });
+  } catch (error: unknown) {
+    next(error);
+  }
+};
+
 export default {
   getAll,
+  getOne,
   create,
+  update,
+  deleteOne,
 };

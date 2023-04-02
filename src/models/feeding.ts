@@ -4,12 +4,6 @@ import { Baby } from './baby'
 
 class Feeding extends Model { }
 
-enum FeedingType {
-    BREASTFEEDING = 'breastfeeding',
-    BOTTLE = 'bottle',
-    SOLIDS = 'solids',
-}
-
 Feeding.init(
     {
         id: {
@@ -18,7 +12,7 @@ Feeding.init(
             primaryKey: true
         },
         type: {
-            type: DataTypes.ENUM(FeedingType.BREASTFEEDING, FeedingType.BOTTLE, FeedingType.SOLIDS),
+            type: DataTypes.ENUM('BREASTFEEDING', 'BOTTLE', 'SOLIDS'),
             allowNull: false
         },
         babyId: {
@@ -31,11 +25,11 @@ Feeding.init(
             onDelete: "CASCADE"
         },
         timeLeftBreast: {
-            type: DataTypes.TIME,
+            type: DataTypes.STRING,
             allowNull: true
         },
         timeRightBreast: {
-            type: DataTypes.TIME,
+            type: DataTypes.STRING,
             allowNull: true
         },
         amountBottle: {

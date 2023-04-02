@@ -56,6 +56,7 @@ const getAll = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
     try {
         const { babyId, type } = req.body;
+        console.log(req.body);
         const feeding = await Feeding.create({
             babyId,
             type,

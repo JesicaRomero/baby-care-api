@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { Baby, User } from '../models';
+import { Baby, User, AutonomousCommunity } from '../models';
 import { compareHash, encryptPassword } from '../shared/crypto';
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
@@ -53,17 +53,31 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
  */
 const register = async (req: Request, res: Response) => {
   try {
-    const { babyName, password } = req.body;
+    const userWithBaby = req.body;
+
+    const verifyUser = await User.findOne({
+      where: {
+        email: userWithBaby.email,
+      }
+    });
+
+    if (verifyUser) return res.status(409).json({
+      ok: false,
+      status: 409,
+      message: 'User already exist'
+    });
 
     const user = await User.create({
-      ...req.body,
-      password: await encryptPassword(password),
+      username: userWithBaby.username,
+      email: userWithBaby.email,
+      password: await encryptPassword(userWithBaby.password),
     });
 
     await Baby.create({
       userId: user.dataValues.id,
-      name: babyName,
-      ...req.body,
+      name: userWithBaby.baby.name,
+      birthday: userWithBaby.baby.birthday,
+      communityCode: userWithBaby.baby.communityCode
     });
     res.status(204).json({
       ok: true,
@@ -98,7 +112,8 @@ const register = async (req: Request, res: Response) => {
  */
 const editProfile = async (req: Request, res: Response) => {
   try {
-    const { username, babyName, email, password } = req.body;
+    let { username, name, email, password, newPassword } = req.body;
+    console.log(req.body);
 
     let user = await User.findOne({
       where: { email },
@@ -113,22 +128,42 @@ const editProfile = async (req: Request, res: Response) => {
       });
     }
 
-    user.set({ username, email, password });
+    if (password && newPassword) {
+      const passwordMatch = await compareHash(password, user.dataValues.password);
+      if (passwordMatch) {
+        const hashedPassword = await encryptPassword(newPassword);
+        password = hashedPassword;
+        user.set({ username, email, password });
+      } else return res.status(401).json({
+        ok: false,
+        status: 401,
+        message: 'Current password is incorrect',
+      });
+    } else user.set({ username, email });
+
+    if (name) {  
+      const baby = await Baby.update(
+        { name },
+        {
+          where: {
+            userId: user.dataValues.id,
+          },
+        }
+      );
+      console.log(baby);
+    }
+
     user = await user.save();
 
-    const baby = await Baby.update(
-      { name: babyName },
-      {
-        where: {
-          userId: user.dataValues.id,
-        },
-      }
-    );
+    const updatedUser = await User.findOne({
+      where: { email },
+      include: [{ model: Baby }],
+    });
 
     res.status(200).json({
       ok: true,
       status: 200,
-      message: { user, baby },
+      message: { updatedUser }
     });
   } catch (error) {
     res.status(412).json({
@@ -139,8 +174,25 @@ const editProfile = async (req: Request, res: Response) => {
   }
 };
 
+const getCommunities = async (req: Request, res: Response) => {
+  try {
+    const communities = await AutonomousCommunity.findAll({
+      order: [['name', 'ASC']],
+    });
+    res.status(200).json({
+      ok: true,
+      status: 200,
+      communities
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+}
+
 export default {
   login,
   register,
   editProfile,
+  getCommunities
 };

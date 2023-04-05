@@ -80,4 +80,77 @@ const create = async (req: Request, res: Response) => {
     }
 }
 
-export default { getAll, create }
+/**
+ * @author Roxy Pérez
+ */
+const getOneFeeding = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+        const feeding = await Feeding.findByPk(id);
+        if (!feeding) {
+            return res.status(404).json({
+                ok: false,
+                status: 404,
+                message: 'Feeding not found',
+            });
+        }
+        return res.status(200).json({
+            ok: false,
+            status: 200,
+            message: feeding,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * @author Roxy Pérez
+ */
+const updateFeeding = async (req: Request, res: Response) => {
+    console.log(req.body, req.params);
+    try {
+        const { id } = req.params;
+        await Feeding.update({
+            timeLeftBreast: req.body.timeLeftBreast || null,
+            timeRightBreast: req.body.timeRightBreast || null,
+            amountBottle: req.body.amountBottle || null,
+            amountSolids: req.body.amountSolids || null,
+            createdAt: req.body.createdAt
+        }, { where: { id } });
+
+        const updatedFeeding = await Feeding.findOne({
+            where: { id },
+        });
+        console.log(updatedFeeding);
+
+        return res.status(200).json({
+            ok: true,
+            status: 200,
+            message: updatedFeeding,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+const deleteFeeding = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const feeding = await Feeding.destroy({
+            where: { id },
+        });
+        return res.status(200).json({
+            ok: true,
+            status: 200,
+            message: feeding,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ message: 'Internal server error' });
+    };
+}
+
+export default { getAll, create, getOneFeeding, updateFeeding, deleteFeeding }
